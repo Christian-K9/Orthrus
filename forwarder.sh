@@ -21,19 +21,16 @@ read -p "What Machine Are You Using: " machine_type
 
 if [[ -v machines[$machine_type] ]]; then
     echo "Getting Splunk Forwarder For $machine_type"
-    
-    if [[$input == "windows" ]]; then
-        echo "Just A second
-
-    else
-        splunk_forwarder=${machines[input]}
-        wget -O splunkforwarder.tgz $splunk_forwarder
-        tar -xvzf splunkforwarder.tgz -C /opt/
-        cd /opt/splunkforwarder/bin
-        ./splunk start --accept-license
-        read -p "What Is The Machines IP Server?: " server_ip
-        ./splunk add forward-server $server_ip:9997
-        ./splunk add monitor /var/log
-        ./splunk add monitor /etc/crontab
-        ./splunk add monitor /etc/passwd
-        ./splunk enable boot-start
+    splunk_forwarder=${machines[input]}
+    wget -O splunkforwarder.tgz $splunk_forwarder
+    tar -xvzf splunkforwarder.tgz -C /opt/
+    cd /opt/splunkforwarder/bin
+    ./splunk start --accept-license
+    read -p "What Is The Machines IP Server?: " server_ip
+    ./splunk add forward-server $server_ip:9997
+    ./splunk add monitor /var/log
+    ./splunk add monitor /etc/crontab
+    ./splunk add monitor /etc/passwd
+    ./splunk add monitor /etc/systemd/system
+    ./splunk add monitor /usr/lib/systemd/system
+    ./splunk enable boot-start
