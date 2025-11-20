@@ -1,13 +1,14 @@
 import subprocess
 import getpass
+import urllib.request
 import sys
 import os
 
 forwarder = "splunkforwarder-10.0.1-c486717c322b-windows-x64.msi"
 url = "https://download.splunk.com/products/universalforwarder/releases/10.0.1/windows/splunkforwarder-10.0.1-c486717c322b-windows-x64.msi"
 
-subprocess.run(["powershell","-Command", f"wget '{url}' -OutFile '{forwarder}'"])
 
+urllib.request.urlretrieve(url, forwarder) 
 
 splunk_path = r"C:\Program Files\SplunkUniversalForwarder\bin\splunk.exe"
 splunk_server = input("What Is the Splunk Server IP?: ")
