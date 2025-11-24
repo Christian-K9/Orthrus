@@ -7,8 +7,8 @@ path = r"C:\Program Files\SplunkUniversalForwarder\bin\splunk.exe"
 server = input("What is the Server IP?: ")
 port = input("What is the Server Receiving Port?: ")
 indexer = f"{server}:{port}"
-username = input("Splunk Username")
-password = getpass.getpass("Enter Splunk Password")
+username = input("Splunk Username: ")
+password = getpass.getpass("Enter Splunk Password: ")
 login = f"{username}:{password}"
 
 def run(cmd):
