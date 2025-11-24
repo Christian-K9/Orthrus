@@ -22,22 +22,29 @@ def add_forward_server():
 
 def add_monitors():
     print("Adding IIS logs monitor...")
-    if os.path.exists(r"C:\inetpub\logs\LogFiles\W3SVC1"):
-        run([path, "add", "monitor",
-            r"C:\inetpub\logs\LogFiles\W3SVC1",
+    iis_path = r"C:\inetpub\logs\LogFiles\W3SVC1"
+    if os.path.isdir(iis_path):
+        run([
+            path, "add", "monitor",
+            iis_path,
             "-index", "main",
-            "-sourcetype", "iis"])
+            "-sourcetype", "iis"
+        ])
     else:
-        print("inetpugs/logs doesn't exists")
+        print("IIS logs path does not exist")
 
-    if os.path.exists(r"C:\Windows\System32\winevt\Logs\*evtx"):
-        print("Restarting Windows Event Logs...")
-        run([path, "add", "monitor",
-            r"C:\Windows\System32\winevt\Logs\*evtx",
+    # Windows Event Logs
+    event_path = r"C:\Windows\System32\winevt\Logs"
+    if os.path.isdir(event_path):
+        print("Adding Windows Event Logs...")
+        run([
+            path, "add", "monitor",
+            r"C:\Windows\System32\winevt\Logs\*.evtx",
             "-index", "main",
-            "-sourcetype", "WinEventLog"])
+            "-sourcetype", "WinEventLog"
+        ])
     else:
-        print("windows event logs doesn't exists")
+        print("Windows Event Logs directory does not exist")
 
 def restart_splunk():
     print("Restarting Splunk Universal Forwarder...")
