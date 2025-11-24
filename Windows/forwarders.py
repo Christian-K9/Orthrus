@@ -16,7 +16,7 @@ def run(cmd):
 
 def set_hostname():
     hostname = input("Enter The Hostname For Splunk: ")
-    run([path, "set", "hostname", hostname, "-auth", login], check=True)
+    run([path, "set", "hostname", hostname, "-auth", login])
 
 def add_forward_server():
     print("Removing Any Existing Forward-Server...")
