@@ -14,6 +14,10 @@ login = f"{username}:{password}"
 def run(cmd):
     subprocess.run(cmd, check=True)
 
+def set_hostname():
+    hostname = input("Enter The Hostname For Splunk: ")
+    run[(path, "set", "hostname", hostname, "-auth", login)]
+
 def add_forward_server():
     print("Removing Any Existing Forward-Server...")
     run([path, "remove", "forward-server", indexer])
@@ -57,6 +61,7 @@ def show_status():
     run([path, "list", "monitor"])
 
 if __name__ == "__main__":
+    set_hostname()
     add_forward_server()
     restart_splunk()
     add_monitors()
