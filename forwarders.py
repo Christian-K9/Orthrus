@@ -22,18 +22,18 @@ def add_forward_server():
 
 def add_monitors():
     print("Adding IIS logs monitor...")
-    if os.path.exists("C:\inetpub\logs\LogFiles\W3SVC1"):
+    if os.path.exists(r"C:\inetpub\logs\LogFiles\W3SVC1"):
         run([path, "add", "monitor",
-            "C:\inetpub\logs\LogFiles\W3SVC1",
+            r"C:\inetpub\logs\LogFiles\W3SVC1",
             "-index", "main",
             "-sourcetype", "iis"])
     else:
         print("inetpugs/logs doesn't exists")
 
-    if os.path.exists("C:\Windows\System32\winevt\Logs\*evtx"):
+    if os.path.exists(r"C:\Windows\System32\winevt\Logs\*evtx"):
         print("Restarting Windows Event Logs...")
         run([path, "add", "monitor",
-            "C:\Windows\System32\winevt\Logs\*evtx",
+            r"C:\Windows\System32\winevt\Logs\*evtx",
             "-index", "main",
             "-sourcetype", "WinEventLog"])
     else:
