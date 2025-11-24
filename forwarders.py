@@ -1,6 +1,7 @@
 import subprocess
 import getpass
 import time
+import os
 
 path = r"C:\Program Files\SplunkUniversalForwarder\bin\splunk.exe"
 server = input("What is the Server IP?: ")
@@ -21,16 +22,22 @@ def add_forward_server():
 
 def add_monitors():
     print("Adding IIS logs monitor...")
-    run([path, "add", "monitor",
-        r"C:\inetpub\logs\LogFiles\W3SVC1",
-        "-index", "main",
-        "-sourcetype", "iis"])
+    if os.path.exists("C:\inetpub\logs\LogFiles\W3SVC1"):
+        run([path, "add", "monitor",
+            "C:\inetpub\logs\LogFiles\W3SVC1",
+            "-index", "main",
+            "-sourcetype", "iis"])
+    else:
+        print("inetpugs/logs doesn't exists")
 
-    print("Restarting Windows Event Logs...")
-    run([path, "add", "monitor",
-        r"C:\Windows\System32\winevt\Logs\*evtx",
-        "-index", "main",
-        "-sourcetype", "WinEventLog"])
+    if os.path.exists("C:\Windows\System32\winevt\Logs\*evtx"):
+        print("Restarting Windows Event Logs...")
+        run([path, "add", "monitor",
+            "C:\Windows\System32\winevt\Logs\*evtx",
+            "-index", "main",
+            "-sourcetype", "WinEventLog"])
+    else:
+        print("windows event logs doesn't exists")
 
 def restart_splunk():
     print("Restarting Splunk Universal Forwarder...")
