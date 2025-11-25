@@ -10,14 +10,25 @@ indexer = f"{server}:{port}"
 username = input("Splunk Username: ")
 password = getpass.getpass("Enter Splunk Password: ")
 login = f"{username}:{password}"
+hostname = input("Enter a hostname for this client: ")
 
 def run(cmd):
     subprocess.run(cmd, check=True)
 
 def set_hostname():
-    hostname = input("Enter The Hostname For Splunk: ")
-    run([path, "stop"])
-    run([path, "set", "hostname", hostname, "-auth", login])
+
+    inputs_path = r"C:\Program Files\SplunkUniversalForwarder\etc\system\local\server.conf"
+
+    os.makedirs(os.path.dirname(inputs_path), exist_ok=True)
+
+    config = f"""[general]
+    severName = {hostname}
+    """
+
+    with open(inputs_path, "w") as f:
+        f.write(config)
+
+    print(f"Hostname set to '{hostname}' in inputs.conf")
 
 def add_forward_server():
     print("Removing Any Existing Forward-Server...")
