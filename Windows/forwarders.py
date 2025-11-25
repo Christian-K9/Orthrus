@@ -28,6 +28,13 @@ def set_hostname():
     with open(inputs_path, "w") as f:
         f.write(config)
 
+    inputs_path = r"C:\Program Files\SplunkUniversalForwarder\etc\system\default\server.conf"
+
+    os.makedirs(os.path.dirname(inputs_path), exist_ok=True)
+
+    with open(inputs_path, "w") as f:
+        f.write(config)
+
     print(f"Hostname set to '{hostname}' in inputs.conf")
 
 def add_forward_server():
