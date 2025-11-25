@@ -52,7 +52,7 @@ def add_monitors():
             path, "add", "monitor",
             iis_path,
             "-index", "main",
-            "-sourcetype", "iis", "-auth", login
+            "-sourcetype", "iis"
         ])
     else:
         print(red + "Error: IIS logs path does not exist")
@@ -66,7 +66,7 @@ def add_monitors():
             path, "add", "monitor",
             r"C:\Windows\System32\winevt\Logs\*.evtx",
             "-index", "main",
-            "-sourcetype", "WinEventLog", "-auth", login
+            "-sourcetype", "WinEventLog"
         ])
     else:
         print(red + "Error: Windows Event Logs directory does not exist")
