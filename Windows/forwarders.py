@@ -53,7 +53,7 @@ def add_forward_server():
     run([path, "add", "forward-server", indexer, "-auth", login])
 
 def add_monitors():
-    red = '\033[91m'
+    red = "\033[91m"
     print("Adding IIS logs monitor...")
     iis_path = r"C:\inetpub\logs\LogFiles\W3SVC1"
     if os.path.isdir(iis_path):
