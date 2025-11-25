@@ -43,6 +43,7 @@ def set_hostname():
     with open(server_conf, "w") as f:
         f.write(content)
 
+    run([path, "set", "default-hostname", hostname])
     print(f"Hostname set to '{hostname}' in server.conf")
 
 
