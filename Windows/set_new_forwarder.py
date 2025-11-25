@@ -76,8 +76,8 @@ def show_status():
     run([path, "list", "monitor"])
 
 if __name__ == "__main__":
-    set_hostname()
     add_forward_server()
+    set_hostname()
     restart_splunk()
     add_monitors()
     restart_splunk()
