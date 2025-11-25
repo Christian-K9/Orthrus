@@ -16,26 +16,35 @@ def run(cmd):
     subprocess.run(cmd, check=True)
 
 def set_hostname():
+    server_conf = r"C:\Program Files\SplunkUniversalForwarder\etc\system\local\server.conf"
+    os.makedirs(os.path.dirname(server_conf), exist_ok=True)
 
-    inputs_path = r"C:\Program Files\SplunkUniversalForwarder\etc\system\local\server.conf"
+    try:
+        with open(server_conf, "r") as f:
+            content = f.read()
+    except FileNotFoundError:
+        content = ""
 
-    os.makedirs(os.path.dirname(inputs_path), exist_ok=True)
+    if "[general]" not in content:
+        content = "[general]\n" + content
 
-    config = f"""[general]
-    severName = {hostname}
-    """
+    if "serverName" in content:
+        lines = content.splitlines()
+        new_lines = []
+        for line in lines:
+            if line.strip().startswith("serverName"):
+                new_lines.append(f"serverName = {hostname}")
+            else:
+                new_lines.append(line)
+        content = "\n".join(new_lines) + "\n"
+    else:
+        content += f"serverName = {hostname}\n"
 
-    with open(inputs_path, "w") as f:
-        f.write(config)
+    with open(server_conf, "w") as f:
+        f.write(content)
 
-    inputs_path = r"C:\Program Files\SplunkUniversalForwarder\etc\system\default\server.conf"
+    print(f"Hostname set to '{hostname}' in server.conf")
 
-    os.makedirs(os.path.dirname(inputs_path), exist_ok=True)
-
-    with open(inputs_path, "w") as f:
-        f.write(config)
-
-    print(f"Hostname set to '{hostname}' in inputs.conf")
 
 def add_forward_server():
     print("Removing Any Existing Forward-Server...")
