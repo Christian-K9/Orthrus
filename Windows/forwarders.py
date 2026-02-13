@@ -76,7 +76,7 @@ def add_monitors():
             path, "add", "monitor",
             r"C:\Windows\System32\winevt\Logs\*.evtx",
             "-index", "main",
-            "-sourcetype", "WinEventLog", -"auth", login
+            "-sourcetype", "WinEventLog"
         ])
     else:
         print(red + "Error: Windows Event Logs directory does not exist")
@@ -84,7 +84,7 @@ def add_monitors():
 
 def restart_splunk():
     print("Restarting Splunk Universal Forwarder...")
-    run([path, "restart" -"auth", login])
+    run([path, "restart"])
 
 def show_status():
     print("Waiting 15 seconds for Splunk UF to reconnect...")
