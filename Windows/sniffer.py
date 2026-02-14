@@ -54,6 +54,17 @@ else:
     print(f"{red} Error: File {snort_location} Does not Exists. Check File Permissions {reset}")
     exit()
 
+#Download Snort Rules Files
+#https://rules.emergingthreats.net/open/snort-2.9.0/rules/emerging-dns.rules
+rules = ["dns", "exploit", "local", "malware", "policy", "web_server"]
+for i in rules:
+    print(f"Downloading Rule For {i}")
+    rule_url = "https://rules.emergingthreats.net/open/snort-2.9.0/rules"
+    rule_wr = os.path.join(rule_url, i, ".rules")
+    rule_file = os.path.join(snort_location, "etc", "rules", i)
+    run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", rule_wr,
+     "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", rule_file])
+
 #Change Snort Config File
 print("Updating Snort File")
 conf = os.path.join(snort_location, "etc", "snort.conf")
