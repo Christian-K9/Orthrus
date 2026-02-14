@@ -37,7 +37,7 @@ if os.path.exists(compressed_file):
     print(f"{green} File Exists {reset}")
 else:
     print(f"{red} Error: File {snort_location} Does not Exists. Check File Permissions {reset}")
-    exit
+    exit()
 #uncompress snort
 print("Uncompressing Snort File...")
 run("tar", "-xvzf", compressed_file)
@@ -52,7 +52,7 @@ if os.path.exists(npcap_location):
     print(f"{green} File Exists {reset}")
 else:
     print(f"{red} Error: File {snort_location} Does not Exists. Check File Permissions {reset}")
-    exit
+    exit()
 
 #Change Snort Config File
 print("Updating Snort File")
