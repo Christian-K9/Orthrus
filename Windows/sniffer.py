@@ -56,16 +56,16 @@ else:
 
 #Change Snort Config File
 print("Updating Snort File")
-conf = f"{snort_location}\etc\snort.conf"
-original = 'snort.conf'
+conf = os.path.join(snort_location, "etc", "snort.conf")
+original = conf
 temp = 'snort_temp.conf'
 hostname = socket.gethostname()
-ip_address = socket.gethostbyname()
+ip_address = socket.gethostbyname(hostname)
 
 with open(original, 'r') as f_in, open(temp, 'w') as f_out:
     for line in f_in:
         if "ipvar HOME_NET" in line:
-            f_out.write(f"ipvar HOME_NET {ip_address}")
+            f_out.write(f"ipvar HOME_NET {ip_address}\n")
         else:
             f_out.write(line)
 os.remove(original)
@@ -81,8 +81,9 @@ for line in lines:
     if "disabled" not in line and (line != lines[0] and line != lines[1]):
         parts = line.split()
         if parts[0].isdigit():
-            interface = parts[0]
+            interface = str(parts[0])
             print("Sniffing Packets On Interface f{interface}")
         break
 
-run([application, "-l", f"{snort_location}\log]", "-L", "alerts.log", "-i", interface])
+log_path = os.path.join(snort_location, "log")
+run([application, "-l", log_path, "-L", "alerts.log", "-i", interface])
