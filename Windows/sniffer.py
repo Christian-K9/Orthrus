@@ -28,20 +28,35 @@ if answer == "y":
 
 #Install Snort
 # #Invoke-WebRequest -Uri "https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz" -Headers @{ "User-Agent" = "Mozilla/5.0" } -OutFile "script.tar.gz"
-
+print(f"{yellow} Installing Snort... {reset}")
 compressed_file = snort_location + ".tar.gz"
 run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", "https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz",
      "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", compressed_file])
+print(f"{yellow} Checking If Snort File Exist... {reset}")
+if os.path.exists(compressed_file):
+    print(f"{green} File Exists {reset}")
+else:
+    print(f"{red} Error: File {snort_location} Does not Exists. Check File Permissions {reset}")
+    exit
 #uncompress snort
-run("tar", "-xvzf", snort_location)
+print("Uncompressing Snort File...")
+run("tar", "-xvzf", compressed_file)
 
 #Install npcap
 #Invoke-WebRequest -Uri "https://npcap.com/dist/npcap-1.87.exe" -Headers @{ "User-Agent" = "Mozilla/5.0" } -OutFile "script.py"
 run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", "https://npcap.com/dist/npcap-1.87.exe",
      "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", npcap_location])
 
+print(f"{yellow} Checking If npcap File Exist... {reset}")
+if os.path.exists(npcap_location):
+    print(f"{green} File Exists {reset}")
+else:
+    print(f"{red} Error: File {snort_location} Does not Exists. Check File Permissions {reset}")
+    exit
+
 #Change Snort Config File
-conf = "f{snort_location}\etc\snort.conf"
+print("Updating Snort File")
+conf = f"{snort_location}\etc\snort.conf"
 original = 'snort.conf'
 temp = 'snort_temp.conf'
 hostname = socket.gethostname()
@@ -50,7 +65,7 @@ ip_address = socket.gethostbyname()
 with open(original, 'r') as f_in, open(temp, 'w') as f_out:
     for line in f_in:
         if "ipvar HOME_NET" in line:
-            f_out.write("ipvar HOME_NET f{ip_address}")
+            f_out.write(f"ipvar HOME_NET {ip_address}")
         else:
             f_out.write(line)
 os.remove(original)
@@ -70,4 +85,4 @@ for line in lines:
             print("Sniffing Packets On Interface f{interface}")
         break
 
-run([application, "-l", "f{snort_location}\log]", "-L", "alerts.log", "-i", interface])
+run([application, "-l", f"{snort_location}\log]", "-L", "alerts.log", "-i", interface])
