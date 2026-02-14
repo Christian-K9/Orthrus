@@ -40,7 +40,7 @@ else:
     exit()
 #uncompress snort
 print("Uncompressing Snort File...")
-run("tar", "-xvzf", compressed_file)
+subprocess.run(["tar", "-xvzf", compressed_file])
 
 #Install npcap
 #Invoke-WebRequest -Uri "https://npcap.com/dist/npcap-1.87.exe" -Headers @{ "User-Agent" = "Mozilla/5.0" } -OutFile "script.py"
