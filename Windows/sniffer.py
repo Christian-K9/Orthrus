@@ -10,91 +10,98 @@ yellow = "\033[33m"
 def run(cmd):
     subprocess.run(cmd, check=True)
 
-#Snort File Location
-snort_location = r"C:\Users\Administrator\Snort"
+    #install snort
+def install():
 
-answer = None
-print("f{yellow} File Location of Snort: f{snort_location}")
-answer = input("Change File Location? (y/n) : f{reset}")
-if answer == "y":
-    snort_location = input("Enter File Location")
+    #Snort File Location
+    snort_location = r"C:\Users\Administrator\Snort"
 
-npcap_location = r"C:\Users\Administrator\npcap.exe"
+    answer = None
+    print(f"{yellow} File Location of Snort: {snort_location}")
+    answer = input(f"Change File Location? (y/n) : {reset}")
+    if answer == "y":
+        snort_location = input("Enter File Location: ")
 
-print("f{yellow} File Location of npcap: f{npcap_location}")
-answer = input("Change File Location? (y/n) : f{reset}")
-if answer == "y":
-    npcap_location = input("Enter File Location")
+    npcap_location = r"C:\Users\Administrator\npcap.exe"
 
-#Install Snort
-# #Invoke-WebRequest -Uri "https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz" -Headers @{ "User-Agent" = "Mozilla/5.0" } -OutFile "script.tar.gz"
-print(f"{yellow} Installing Snort... {reset}")
-compressed_file = snort_location + ".tar.gz"
-run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", "https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz",
-     "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", compressed_file])
-print(f"{yellow} Checking If Snort File Exist... {reset}")
-if os.path.exists(compressed_file):
-    print(f"{green} File Exists {reset}")
-else:
-    print(f"{red} Error: File {snort_location} Does not Exists. Check File Permissions {reset}")
-    exit()
-#uncompress snort
-print("Uncompressing Snort File...")
-subprocess.run(["tar", "-xvzf", compressed_file])
+    print(f"{yellow} File Location of npcap: {npcap_location}")
+    answer = input(f"Change File Location? (y/n) : {reset}")
+    if answer == "y":
+        npcap_location = input("Enter File Location")
 
-#Install npcap
-#Invoke-WebRequest -Uri "https://npcap.com/dist/npcap-1.87.exe" -Headers @{ "User-Agent" = "Mozilla/5.0" } -OutFile "script.py"
-run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", "https://npcap.com/dist/npcap-1.87.exe",
-     "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", npcap_location])
+    #Install Snort
+    # #Invoke-WebRequest -Uri "https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz" -Headers @{ "User-Agent" = "Mozilla/5.0" } -OutFile "script.tar.gz"
+    print(f"{yellow} Installing Snort... {reset}")
+    compressed_file = r"C:\Users\Administrator"
+    run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", "https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz",
+        "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", compressed_file])
+    print(f"{yellow} Checking If Snort File Exist... {reset}")
+    if os.path.exists(compressed_file):
+        print(f"{green} File Exists {reset}")
+    else:
+        print(f"{red} Error: File {snort_location} Does not Exists. Check File Permissions {reset}")
+        exit()
+    #uncompress snort
+    print("Uncompressing Snort File...")
+    subprocess.run(["tar", "-xvzf", compressed_file])
 
-print(f"{yellow} Checking If npcap File Exist... {reset}")
-if os.path.exists(npcap_location):
-    print(f"{green} File Exists {reset}")
-else:
-    print(f"{red} Error: File {snort_location} Does not Exists. Check File Permissions {reset}")
-    exit()
+    #Install npcap
+    #Invoke-WebRequest -Uri "https://npcap.com/dist/npcap-1.87.exe" -Headers @{ "User-Agent" = "Mozilla/5.0" } -OutFile "script.py"
+    run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", "https://npcap.com/dist/npcap-1.87.exe",
+        "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", npcap_location])
 
-#Download Snort Rules Files
-#https://rules.emergingthreats.net/open/snort-2.9.0/rules/emerging-dns.rules
-rules = ["dns", "exploit", "local", "malware", "policy", "web_server"]
-for i in rules:
-    print(f"Downloading Rule For {i}")
-    rule_url = "https://rules.emergingthreats.net/open/snort-2.9.0/rules"
-    rule_wr = os.path.join(rule_url, i, ".rules")
-    rule_file = os.path.join(snort_location, "etc", "rules", i)
-    run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", rule_wr,
-     "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", rule_file])
+    print(f"{yellow} Checking If npcap File Exist... {reset}")
+    if os.path.exists(npcap_location):
+        print(f"{green} File Exists {reset}")
+    else:
+        print(f"{red} Error: File {snort_location} Does not Exists. Check File Permissions {reset}")
+        exit()
 
-#Change Snort Config File
-print("Updating Snort File")
-conf = os.path.join(snort_location, "etc", "snort.conf")
-original = conf
-temp = 'snort_temp.conf'
-hostname = socket.gethostname()
-ip_address = socket.gethostbyname(hostname)
+    #Download Snort Rules Files
+    #https://rules.emergingthreats.net/open/snort-2.9.0/rules/emerging-dns.rules
+    rules = ["dns", "exploit", "local", "malware", "policy", "web_server"]
+    for i in rules:
+        print(f"Downloading Rule For {i}")
+        rule_url = "https://rules.emergingthreats.net/open/snort-2.9.0/rules"
+        rule_wr = os.path.join(rule_url, i, ".rules")
+        rule_file = os.path.join(snort_location, "etc", "rules", i)
+        run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", rule_wr,
+        "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", rule_file])
 
-with open(original, 'r') as f_in, open(temp, 'w') as f_out:
-    for line in f_in:
-        if "ipvar HOME_NET" in line:
-            f_out.write(f"ipvar HOME_NET {ip_address}\n")
-        else:
-            f_out.write(line)
-os.remove(original)
-os.rename(temp, original)
+    #Change Snort Config File
+    print("Updating Snort File")
+    conf = os.path.join(snort_location, "etc", "snort.conf")
+    original = conf
+    temp = 'snort_temp.conf'
+    hostname = socket.gethostname()
+    ip_address = socket.gethostbyname(hostname)
+
+    with open(original, 'r') as f_in, open(temp, 'w') as f_out:
+        for line in f_in:
+            if "ipvar HOME_NET" in line:
+                f_out.write(f"ipvar HOME_NET {ip_address}\n")
+            else:
+                f_out.write(line)
+    os.remove(original)
+    os.rename(temp, original)
 
 #activate snort
-#snort -l snort_path -L alerts.log -i <interface>
-interface = 0
-application = "f{snort_location}\Snort\bin\snort.exe"
-result = subprocess.run([application, "-W"], capture_output=True, text=True)
-lines = result.stdout.splitlines()
-for line in lines:
-    if "disabled" not in line and (line != lines[0] and line != lines[1]):
-        parts = line.split()
-        if parts[0].isdigit():
-            interface = str(parts[0])
-            print("Sniffing Packets On Interface f{interface}")
-        break
+def activate():
+    snort_location = r"C:\Users\Administrator"
+    #snort -l snort_path -L alerts.log -i <interface>
+    interface = 0
+    application = "f{snort_location}\Snort\bin\snort.exe"
+    result = subprocess.run([application, "-W"], capture_output=True, text=True)
+    lines = result.stdout.splitlines()
+    for line in lines:
+        if "disabled" not in line and (line != lines[0] and line != lines[1]):
+            parts = line.split()
+            if parts[0].isdigit():
+                interface = str(parts[0])
+                print(f"Sniffing Packets On Interface {interface}")
+            break
 
-log_path = os.path.join(snort_location, "log")
-run([application, "-l", log_path, "-L", "alerts.log", "-i", interface])
+    log_path = os.path.join(snort_location, "log")
+    run([application, "-l", log_path, "-L", "alerts.log", "-i", interface])
+
+install()
