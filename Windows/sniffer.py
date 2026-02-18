@@ -32,7 +32,7 @@ def install():
     #Install Snort
     # #Invoke-WebRequest -Uri "https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz" -Headers @{ "User-Agent" = "Mozilla/5.0" } -OutFile "script.tar.gz"
     print(f"{yellow} Installing Snort... {reset}")
-    compressed_file = r"C:\Users\Administrator"
+    compressed_file = snort_location + "tar.gz"
     run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", "https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz",
         "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", compressed_file])
     print(f"{yellow} Checking If Snort File Exist... {reset}")
