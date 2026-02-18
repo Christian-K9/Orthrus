@@ -88,14 +88,28 @@ def install_alternate():
     # #Invoke-WebRequest -Uri "https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz" -Headers @{ "User-Agent" = "Mozilla/5.0" } -OutFile "script.tar.gz"
     print("Creating Snort Folder")
     snort_file = os.path.join(snort_location, "Snort_Tar")
-    tar_file = os.path.join(snort_file, "snort.tar.gz")
+    exe_file = os.path.join(snort_file, "snort.exe")
     print(f"Snort File: {snort_file}")
     subprocess.run(["mkdir", snort_file], shell=True)
     print(f"{yellow} Installing Snort... {reset}")
     print(f"{yellow} Outputting Snort to {snort_file}")
     run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", "https://www.snort.org/downloads/snort/Snort_2_9_20_Installer.x64.exe",
-        "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", tar_file])
-    print(f"{yellow} Checking If Snort File Exist... {reset}")
+        "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", exe_file])
+    print(f"{yellow} Checking If snort File Exist... {reset}")
+    if os.path.exists(exe_file):
+        print(f"{green} File Exists {reset}")
+    else:
+        print(f"{red} Error: File {snort_location} Does not Exists. Check File Permissions {reset}")
+        exit()
+    print("Waiting For User To Start Splunk. Press Any Key When Ready")
+    response = input()
+    print(f"Default Snort Location: {snort_location}\Snort")
+    answer = input("Change File Location (y/n): ")
+    if answer == "y":
+        snort_location = input(r"New File Location: ")
+    else:
+        snort_location = r"C:\Users\Administrator\Snort"
+    print(f"New File Location: {snort_location}")
 
 def download_rules():
     #Download Snort Rules Files
