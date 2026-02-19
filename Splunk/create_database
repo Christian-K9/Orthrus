@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#install mysql
+mysql -y root -p
+
+#add sql user
+sudo useradd -r -m -s /sbin/nologin alerts_user
+
+#install mariadb server
+yum install -y mariadb-server
+
+systemctl start mariadb
+systemctl enable mariadb
+
+sudo mkdir /opt/alerts_app
+sudo mv monitor_ACT_II.py /opt/alerts_app/
+sudo chown -R alerts_user:alerts_user /opt/alerts_app
+sudo chmod -R 700 /opt/alerts_app
