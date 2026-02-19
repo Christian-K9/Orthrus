@@ -102,7 +102,7 @@ def install_alternate():
     else:
         print(f"{red} Error: File {snort_location} Does not Exists. Check File Permissions {reset}")
         exit()
-    print("Waiting For User To Start Splunk. Press Any Key When Ready")
+    print("Waiting For User To Start Splunk. Press Any Key When Ready (MAKE SURE FILE IS IN ADMINISTRATOR DIRECTORY)")
     response = input()
     default = os.path.join(snort_location, "Snort")
     print(f"Default Snort Location: {default} ")
@@ -113,6 +113,15 @@ def install_alternate():
         snort_location = r"C:\Users\Administrator\Snort"
     print(f"New File Location: {snort_location}")
 
+def install_redistributable():
+    print("Installing Redistributable")
+    #https://aka.ms/vc14/vc_redist.x64.exe
+    exe_file = snort_location
+    run(["powershell", "-Command", "Invoke-WebRequest", "-Uri", "https://www.snort.org/downloads/snort/Snort_2_9_20_Installer.x64.exe",
+        "-Headers", "@{ 'User-Agent' = 'Mozilla/5.0' }", "-OutFile", exe_file])
+    print("Waiting For User To Start Redistributable. Press Any Key When Ready (MAKE SURE FILE IS IN ADMINISTRATOR DIRECTORY)")
+    response = input()
+    
 def download_rules():
     #Download Snort Rules Files
     #https://rules.emergingthreats.net/open/snort-2.9.0/rules/emerging-dns.rules
@@ -151,9 +160,9 @@ def configure():
 #add snort log files to splunk
 def add_monitors():
     red = "\033[91m"
-    application = os.path.join(snort_location, "bin", "snort.exe")
+    application = os.path.join(snort_location, "Snort", "bin", "snort.exe")
     print("Adding IIS logs monitor...")
-    iis_path = os.path.join(snort_location, "log")
+    iis_path = os.path.join(snort_location, "Snort", "log")
     if os.path.isdir(iis_path):
         run([
             application, "add", "monitor",
@@ -169,8 +178,14 @@ def add_monitors():
 def activate():
     #snort -l snort_path -L alerts.log -i <interface>
     interface = 0
-    application = os.path.join(snort_location, "bin", "snort.exe")
+    application = os.path.join(snort_location, "Snort" "bin", "snort.exe")
+    print(f"{yellow} Application Directory: {application} {reset}")
     result = subprocess.run([application, "-W"], capture_output=True, text=True)
+    print(f"Interface Number Assigned: {result}")
+    answer = input("Change Interface (y/n): ")
+    if answer == "y":
+        result = input("New Interface Number")
+
     lines = result.stdout.splitlines()
     for line in lines:
         if "disabled" not in line and (line != lines[0] and line != lines[1]):
@@ -184,6 +199,9 @@ def activate():
     run([application, "-l", log_path, "-L", "alerts.log", "-i", interface])
 
 install_alternate()
+answer = input("Is C++ Redistributable On Machine? (y/n): ")
+if answer == "no":
+    install_redistributable()
 download_rules()
 configure()
 add_monitors()
