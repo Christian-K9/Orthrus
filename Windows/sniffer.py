@@ -1,5 +1,6 @@
 import subprocess
 import socket
+import time
 import os
 
 reset = "\033[0m"
@@ -133,25 +134,41 @@ def configure():
     print("Updating Snort File")
     conf = os.path.join(snort_location, "etc", "snort.conf")
     print(f"Configuration File: {conf}")
-    original = conf
-    temp = r'snort_temp.conf'
+    temp = conf + ".tmp"
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
 
-    with open(original, 'r') as f_in, open(temp, 'w') as f_out:
+    with open(conf, 'r') as f_in, open(temp, 'w') as f_out:
         for line in f_in:
             if "ipvar HOME_NET" in line:
                 f_out.write(f"ipvar HOME_NET {ip_address}\n")
             else:
                 f_out.write(line)
-    os.remove(original)
-    os.rename(temp, original)
+    os.remove(conf)
+    os.rename(temp, conf)
+
+#add snort log files to splunk
+def add_monitors():
+    red = "\033[91m"
+    application = os.path.join(snort_location, "bin", "snort.exe")
+    print("Adding IIS logs monitor...")
+    iis_path = os.path.join(snort_location, "log")
+    if os.path.isdir(iis_path):
+        run([
+            application, "add", "monitor",
+            iis_path,
+            "-index", "main",
+            "-sourcetype", "iis"
+        ])
+    else:
+        print(red + "Error: IIS logs path does not exist")
+        time.sleep(3)
 
 #activate snort
 def activate():
     #snort -l snort_path -L alerts.log -i <interface>
     interface = 0
-    application = f"{snort_location}\bin\snort.exe"
+    application = os.path.join(snort_location, "bin", "snort.exe")
     result = subprocess.run([application, "-W"], capture_output=True, text=True)
     lines = result.stdout.splitlines()
     for line in lines:
@@ -166,3 +183,7 @@ def activate():
     run([application, "-l", log_path, "-L", "alerts.log", "-i", interface])
 
 install_alternate()
+download_rules()
+configure()
+add_monitors()
+activate()
