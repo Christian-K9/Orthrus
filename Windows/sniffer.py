@@ -104,7 +104,8 @@ def install_alternate():
         exit()
     print("Waiting For User To Start Splunk. Press Any Key When Ready")
     response = input()
-    print(f"Default Snort Location: {snort_location}\Snort")
+    default = os.path.join(snort_location, "Snort")
+    print(f"Default Snort Location: {default} ")
     answer = input("Change File Location (y/n): ")
     if answer == "y":
         snort_location = input(r"New File Location: ")
